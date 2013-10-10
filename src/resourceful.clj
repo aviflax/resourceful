@@ -4,8 +4,9 @@
             [ring.util.response :refer [header]]))
 
 
-(defn ^:private body-length
-  "This is ONLY used for HEAD requests — it WILL exhaust any InputStreams passed in."
+(defn body-length
+  "This should really be private, but I tried that and it breaks `resource`.
+   This is ONLY used for HEAD requests — it WILL exhaust any InputStreams passed in."
   [body]
   ;; TODO: is this treating character encodings correctly?
   ;; TODO: this probably isn’t correctly handling large InputStreams
