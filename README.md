@@ -29,6 +29,16 @@ Add the following dependency to your project.clj file:
 
 ## Usage
 
+### Requiring the macro `resource`
+
+Add the following line to the `:require` part of your `ns` call:
+
+```clojure
+[resourceful :refer [resource]]
+```
+
+### Defining Resources
+
 Let’s say you have a simple resource which supports GET and POST.
 
 With “vanilla” Compojure, you might implement it like so:
