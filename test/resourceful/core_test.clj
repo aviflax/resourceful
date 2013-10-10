@@ -98,6 +98,24 @@
                              "Content-Length" "613"}))))
 
 
+
+
+  (testing "when a GET route does NOT set Content-Length, and the body is an non-standard
+            type, the header Content-Length should not be present in the response"
+    (let [handler (resource "foo" "/"
+                    (GET [] {:status 200
+                             :headers {"Content-Type" "text/plain"}
+                             :body ["foo"]}))
+          req {:uri "/"
+               :request-method :head
+               :headers {"accept" "*/*"}}
+          res (handler req)]
+      (is (= (:status res) 200))
+      (is (empty? (:body res)))
+      (is (= (:headers res) {"Content-Type" "text/plain"}))))
+
+
+
   (testing "when a resource supplies its own HEAD handler, it should be used"
     (let [handler (resource "foo" "/"
                     (HEAD [] {:status 200

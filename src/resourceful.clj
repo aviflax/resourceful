@@ -66,9 +66,9 @@
                           response# (dissoc get-response# :body)]
                       (if (get-in response# [:headers "Content-Length"])
                           response#
-                          ;; TODO: how to handle case where body-length could not determine a length?
-                          (header response# "Content-Length" (body-length
-                                                               (:body get-response#))))))))
+                          (if-let [length# (body-length (:body get-response#))]
+                                  (header response# "Content-Length" length#)
+                                  response#))))))
             ]
 
             (concat ,,,
