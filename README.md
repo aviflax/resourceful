@@ -21,7 +21,11 @@ This has the following concrete benefits:
 
 ## Installation
 
-Coming soon to [Clojars](https://clojars.org/)!
+Add the following dependency to your project.clj file:
+
+```clojure
+[resourceful "0.1.0"]
+```
 
 ## Usage
 
