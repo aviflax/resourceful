@@ -1,4 +1,4 @@
-(ns resourceful.core-test
+(ns resourceful.test
   (:use clojure.test)
   (:require [resourceful :refer [resource]]
             [compojure.core :refer [GET HEAD OPTIONS POST]]
