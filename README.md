@@ -19,6 +19,10 @@ This has the following concrete benefits:
 * helps developers think in terms of *resources* rather than *routes* by making the *code* about
   *resources* rather than *routes*
 
+## Background
+
+For the story behind Resourceful see [this blog post](http://aviflax.com/post/my-first-open-source-clojure-library-resourceful/).
+
 ## Installation
 
 Add the following dependency to your project.clj file:
