@@ -52,7 +52,9 @@
     `(routes
       ;; Building a list “manually” using concat (as opposed to just unquote-splicing)
       ;; because the “when” forms can produce nil values which must be filtered out of the list
-      ~@(-> [
+      ~@(filter (complement nil?)
+          (concat
+            [
             ;; add a HEAD route if GET is provided and HEAD is not
             ;; this MUST come before the provided methods/routes, because Compojure’s GET
             ;; route also handles HEAD requests (and has a bug; it sends Content-Length as 0)
@@ -71,29 +73,27 @@
                                   response#))))))
             ]
 
-            (concat ,,,
-                    ;; output the provided methods/routes
-                    ;; the method-symbols will be output exactly as provided, so if they were
-                    ;; provided unqualified, they’ll be output unqualified. I think this is OK
-                    ;; because the calling NS should have referred the symbols anyway.
-                    (map (fn [[method-symbol bindings & exprs]]
-                             `(~method-symbol ~path ~bindings ~@exprs))
-                           methods))
+            ;; output the provided methods/routes
+            ;; the method-symbols will be output exactly as provided, so if they were
+            ;; provided unqualified, they’ll be output unqualified. I think this is OK
+            ;; because the calling NS should have referred the symbols anyway.
+            (map (fn [[method-symbol bindings & exprs]]
+                   `(~method-symbol ~path ~bindings ~@exprs))
+                 methods)
 
-            (concat ,,, [
-                    ;; output OPTIONS, if it isn’t already provided
-                    (when-not (method-symbols 'OPTIONS)
-                      `(OPTIONS ~path [] {:status 204
-                                          :headers {"Allow" ~allowed
-                                                    "Description" ~description}
-                                          :body nil}))
+            [
+             ;; output OPTIONS, if it isn’t already provided
+             (when-not (method-symbols 'OPTIONS)
+               `(OPTIONS ~path [] {:status 204
+                                   :headers {"Allow" ~allowed
+                                             "Description" ~description}
+                                   :body nil}))
 
-                    ;; output an ANY route to return a 405 for any unsupported method
-                    (when-not (method-symbols 'ANY)
-                      `(ANY ~path [] {:status 405
-                                      :headers {"Allow" ~allowed
-                                                "Content-Type" "text/plain;charset=UTF-8"
-                                                "Content-Length" "18"}
-                                      :body "Method Not Allowed"}))
-            ])
-            (->> (filter (complement nil?) ,,,))))))
+             ;; output an ANY route to return a 405 for any unsupported method
+             (when-not (method-symbols 'ANY)
+               `(ANY ~path [] {:status 405
+                               :headers {"Allow" ~allowed
+                                         "Content-Type" "text/plain;charset=UTF-8"
+                                         "Content-Length" "18"}
+                               :body "Method Not Allowed"}))
+            ])))))
