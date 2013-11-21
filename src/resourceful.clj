@@ -52,7 +52,7 @@
     `(routes
       ;; Building a list “manually” using concat (as opposed to just unquote-splicing)
       ;; because the “when” forms can produce nil values which must be filtered out of the list
-      ~@(filter (complement nil?)
+      ~@(remove nil?
           (concat
             [
             ;; add a HEAD route if GET is provided and HEAD is not
