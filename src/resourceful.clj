@@ -73,6 +73,9 @@
 
             (concat ,,,
                     ;; output the provided methods/routes
+                    ;; the method-symbols will be output exactly as provided, so if they were
+                    ;; provided unqualified, they’ll be output unqualified. I think this is OK
+                    ;; because the calling NS should have referred the symbols anyway.
                     (map (fn [[method-symbol bindings & exprs]]
                              `(~method-symbol ~path ~bindings ~@exprs))
                            methods))
