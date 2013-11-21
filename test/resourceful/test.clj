@@ -187,4 +187,18 @@
       (is (empty? (:body res)))
       (let [res-allow-header (get-in res [:headers "Allow"])
             res-allow-methods (set (split res-allow-header #", "))]
-        (is (= res-allow-methods #{"GET" "HEAD" "POST" "OPTIONS"}))))))
+        (is (= res-allow-methods #{"GET" "HEAD" "POST" "OPTIONS"})))))
+
+  (testing "a response to an OPTIONS request should include the header `Description`"
+    (let [description "A Collection of Snark"
+          handler (resource description "/"
+                    (GET [] {:status 200
+                             :headers {"Content-Type" "text/plain"}
+                             :body "bar"}))
+          req {:uri "/"
+               :request-method :options}
+          res (handler req)]
+      (is (= (:status res) 204))
+      (is (empty? (:body res)))
+      (let [res-description-header (get-in res [:headers "Description"])]
+        (is (= res-description-header description))))))

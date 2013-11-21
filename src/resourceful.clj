@@ -41,7 +41,7 @@
              \"/authors/:author/books\"
              (GET [author] (get-books author))
              (POST [author title] (create-book author) (get-books author)))"
-  [name path & methods]
+  [description path & methods]
   (let [method-symbols (set (map first methods))
         allowed (->> (map str method-symbols)
                      (concat ["OPTIONS" (when (or (method-symbols 'HEAD)
@@ -84,7 +84,8 @@
                     ;; output OPTIONS, if it isn’t already provided
                     (when-not (method-symbols 'OPTIONS)
                       `(OPTIONS ~path [] {:status 204
-                                          :headers {"Allow" ~allowed}
+                                          :headers {"Allow" ~allowed
+                                                    "Description" ~description}
                                           :body nil}))
 
                     ;; output an ANY route to return a 405 for any unsupported method
