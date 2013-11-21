@@ -244,8 +244,7 @@
 
 
 
-;; possible enhancements
-;; debug flag, duplicate method error, return resource definition on OPTIONS
+
 
 
 
@@ -300,6 +299,8 @@
 
 
 
+;; possible enhancements suggested by audience members:
+;; debug flag, duplicate method error, return resource definition on OPTIONS
 
 
 
