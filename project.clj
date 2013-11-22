@@ -5,5 +5,5 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  ;; the versions of Compojure and Ring should be locked together
-                 [compojure "1.1.5"]
-                 [ring/ring-core "1.1.7"]])
+                 [compojure "1.1.6"]
+                 [ring/ring-core "1.2.1"]])
