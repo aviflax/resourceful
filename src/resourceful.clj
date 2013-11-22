@@ -3,31 +3,12 @@
             [compojure.core :refer [ANY HEAD OPTIONS routes]]
             [ring.util.response :refer [header]]))
 
-
-(defn body-length
-  "This should really be private, but I tried that and it breaks `resource`.
-   This is ONLY used for HEAD requests — it WILL exhaust any InputStreams passed in."
-  [body]
-  ;; TODO: is this treating character encodings correctly?
-  ;; TODO: this probably isn’t correctly handling large InputStreams
-  ;; TODO: should probabyly wrap this whole thing in a try — right?
-  ;; TODO: maybe this should throw an exception if it can’t determine a length
-  ;;       (such as the case wherein the passed value isn’t a supported type)
-  (condp instance? body
-    String (count body)
-    java.io.File (.length body)
-    java.io.InputStream (.available body)
-    clojure.lang.ISeq (reduce + (map (comp count str) body))
-    nil))
-
-
 (defmacro resource
   "Provides more concise and more RESTful alternative to Compojure’s `routes`.
 
   Specifically:
 
    * Allows the path to be specified only once even if a resource supports multiple methods
-   * Adds a HEAD route, if GET is specified and HEAD is not
    * Adds an OPTIONS route which returns an Allow header, if OPTIONS is not specified
    * Adds an ANY route to return a 405 response for any unsupported method
 
@@ -47,32 +28,13 @@
                      (concat ["OPTIONS" (when (or (method-symbols 'HEAD)
                                                   (method-symbols 'GET))
                                               "HEAD")] ,,,)
-                     (filter (complement nil?) ,,,)
+                     (remove nil? ,,,)
                      (join ", " ,,,))]
     `(routes
       ;; Building a list “manually” using concat (as opposed to just unquote-splicing)
       ;; because the “when” forms can produce nil values which must be filtered out of the list
       ~@(remove nil?
           (concat
-            [
-            ;; add a HEAD route if GET is provided and HEAD is not
-            ;; this MUST come before the provided methods/routes, because Compojure’s GET
-            ;; route also handles HEAD requests (and has a bug; it sends Content-Length as 0)
-            (when (and (method-symbols 'GET)
-                        (not (method-symbols 'HEAD)))
-               (let [get-method (-> (filter #(= (first %) 'GET) methods)
-                                    first)
-                     [_ bindings & exprs] get-method]
-                 `(HEAD ~path ~bindings
-                    (let [get-response# (do ~@exprs)
-                          response# (dissoc get-response# :body)]
-                      (if (get-in response# [:headers "Content-Length"])
-                          response#
-                          (if-let [length# (body-length (:body get-response#))]
-                                  (header response# "Content-Length" length#)
-                                  response#))))))
-            ]
-
             ;; output the provided methods/routes
             ;; the method-symbols will be output exactly as provided, so if they were
             ;; provided unqualified, they’ll be output unqualified. I think this is OK
