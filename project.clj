@@ -1,4 +1,4 @@
-(defproject resourceful "0.1.0"
+(defproject resourceful "0.1.1"
   :description "Provides a more concise and more RESTful alternative to Compojure’s routes"
   :url "https://github.com/aviflax/resourceful"
   :license {:name "Eclipse Public License"
