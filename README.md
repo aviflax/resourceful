@@ -27,7 +27,7 @@ For the story behind Resourceful see [this blog post](http://aviflax.com/post/my
 Add the following dependency to your project.clj file:
 
 ```clojure
-[resourceful "0.1.0"]
+[resourceful "0.1.1"]
 ```
 
 ## Usage
