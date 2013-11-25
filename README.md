@@ -1,8 +1,8 @@
 # resourceful
 
-A Clojure library which provides a more concise and more RESTful alternative to
-[Compojure’s](https://github.com/weavejester/compojure) routes, in the form of the macro
-`resource` which a developer can use to declare a *resource*, as opposed to a *route*.
+A Clojure library which enhances
+[Compojure’s](https://github.com/weavejester/compojure) routes DSL by adding the macro
+`resource` which a developer can use to declare a *resource*, as opposed to a *route*. This allows the code for a Web API to use the native paradigm of the Web: resources.
 
 `resource` expands into a call to Compojure’s `routes`, so it can be used anywhere `routes` can be
 used.
